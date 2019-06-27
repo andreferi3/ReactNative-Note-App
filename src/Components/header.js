@@ -1,9 +1,45 @@
 import React, { Component } from 'react';
-import { View, TouchableOpacity, Image, Text, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, Image, Text, StyleSheet, Modal, TouchableHighlight } from 'react-native';
+import { Form, Picker, Icon } from 'native-base';
 
 
 class header extends React.Component {
-    render() {
+
+    constructor(props) {
+        super(props);
+    
+        this.state = {
+          pickerSelection: 'Default value!',
+          pickerDisplayed: false
+        }
+      }
+    
+      setPickerValue(newValue) {
+        this.setState({
+          pickerSelection: newValue
+        })
+    
+        this.togglePicker();
+      }
+    
+      togglePicker() {
+        this.setState({
+          pickerDisplayed: !this.state.pickerDisplayed
+        })
+      }
+    
+      render() {
+        const pickerValues = [
+          {
+            title: 'ASCENDING',
+            value: 'ASCENDING'
+          },
+          {
+            title: 'DESCENDING',
+            value: 'DESCENDING'
+          }
+        ]
+
         return (
             <View style={styles.header}>
                 <View style={styles.imgProfilContainer}>
@@ -19,13 +55,31 @@ class header extends React.Component {
                 </View>
 
                 <View style={styles.sortByContainer}>
-                    <TouchableOpacity onPress={() => {
-                        
-                    }}>
-                        <Image 
-                            style={{width:20, height:20}} 
-                            source={require('../icon/download.png')}  />
+
+                    <TouchableOpacity onPress={() => this.togglePicker()}>
+                        <Image source={require('../icon/download.png')} style={{width:20, height:20}} />
                     </TouchableOpacity>
+
+                    <Modal visible={this.state.pickerDisplayed} animationType={"fade"} transparent={true}>
+                    <View style={{ margin: 20, padding: 20,
+                        backgroundColor: '#fff',
+                        top: 20,
+                        right: 0,
+                        alignItems: 'flex-start',
+                        elevation: 5,
+                        position: 'absolute' }}>
+                        { pickerValues.map((value, index) => {
+                        return <TouchableHighlight key={index} onPress={() => this.setPickerValue(value.value)} style={{ paddingTop: 4, paddingBottom: 4 }}>
+                            <Text>{ value.title }</Text>
+                            </TouchableHighlight>
+                        })}
+
+                        
+                        <TouchableHighlight onPress={() => this.togglePicker()} style={{ paddingTop: 4, paddingBottom: 4 }}>
+                        <Text style={{ color: '#999' }}>Cancel</Text>
+                        </TouchableHighlight>
+                    </View>
+                    </Modal>
                 </View>
             </View>
         )

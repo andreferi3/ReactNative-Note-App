@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Image } from 'react-native';
 
 export default class Notes extends React.Component {
     static navigationOptions = {
-        drawerLabel: 'Notes',
+        drawerLabel: 'Portofolio',
         drawerIcon: ({ tintColor }) => (
             <Image 
             source={require('../icon/portofolio.png')} 

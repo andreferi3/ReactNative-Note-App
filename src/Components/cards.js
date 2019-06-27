@@ -4,9 +4,15 @@ import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-nativ
 import dummyData from '../Components/dummyData';
 
 class FlatListItem extends Component {
+
+    state = {
+        color: this.props.item.category.toLowerCase()
+    }
+
     render() {
         return (
-            <TouchableOpacity style={
+            <TouchableOpacity onPress={() => {this.props.navigation.navigate('EditNote', this.props.item)}}
+            style={
                 {
                     flex: 1,
                     margin: '4%',
@@ -14,14 +20,15 @@ class FlatListItem extends Component {
                     height: hp('25%'),
                     borderRadius: 5,
                     elevation: 5,
+                    zIndex: -1,
                     paddingHorizontal: 20,
-                    backgroundColor: this.props.item.category == 'Learn' ? '#2FC2DF' : '#FAD06C'
+                    backgroundColor: this.state.color == 'learn' ? '#2FC2DF' : this.state.color == 'work' ? '#C0EB6A' : this.state.color == 'wishlist' ? '#FAD06C' : this.state.color == 'personal' ? '#FF92A9' : '#004d61'
                 }
             }>
-                <Text style={styles.date}>{this.props.item.time}</Text>
+                <Text style={styles.date}>{this.props.item.time.substring(0,)}</Text>
                 <Text style={styles.title}>{this.props.item.title}</Text>
                 <Text style={styles.category}>{this.props.item.category}</Text>
-                <Text style={styles.note}>{this.props.item.note}</Text>
+                <Text style={styles.note}>{this.props.item.note.substring(0,40)+'...'}</Text>
             </TouchableOpacity>
         )
     }
@@ -36,7 +43,7 @@ export default class cards extends Component {
                 numColumns={2}
                 renderItem={({item, index}) => {
                     return(
-                        <FlatListItem item={item} index={index}>
+                        <FlatListItem navigation={this.props.navigation} item={item} index={index}>
 
                         </FlatListItem>
                     )
