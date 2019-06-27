@@ -16,10 +16,10 @@ export default class textInput extends Component {
   render() {
     return (
       <View style={{marginHorizontal:20}}>
-        <TextInput placeholder="ADD TITLE..." maxLength={50} style={{marginTop: 60, fontSize: 24}} numberOfLines={5} multiline={true} value='' editable={true} />
+        <TextInput placeholder="ADD TITLE..." maxLength={50} style={{marginTop: 60, fontSize: 24}} numberOfLines={5} multiline={true} editable={true} />
         <ScrollView style={{height:heightPercentageToDP('30%')}}>
             
-            <TextInput placeholder="ADD DESCRIPTION..." style={{fontSize: 24}} numberOfLines={7} multiline={true} value='' editable={true} />
+            <TextInput placeholder="ADD DESCRIPTION..." style={{fontSize: 24}} numberOfLines={7} multiline={true} editable={true} />
 
         </ScrollView>
 

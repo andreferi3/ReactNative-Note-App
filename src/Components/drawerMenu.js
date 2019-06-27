@@ -10,31 +10,31 @@ class drawerMenu extends Component {
           pickerSelection: 'Default value!',
           pickerDisplayed: false
         }
-      }
+    }
     
-      setPickerValue(newValue) {
+    setPickerValue(newValue) {
         this.setState({
-          pickerSelection: newValue
+            pickerSelection: newValue
         })
-    
+
         this.togglePicker();
-      }
+    }
     
-      togglePicker() {
+    togglePicker() {
         this.setState({
-          pickerDisplayed: !this.state.pickerDisplayed
+            pickerDisplayed: !this.state.pickerDisplayed
         })
-      }
+    }
       
     render() {
         return (
             <ScrollView>
                 <View style={styles.drawerProfile}>
-                    <Image source={require('../icon/andre.jpg')} style={{height:120, width:120, borderRadius:60, justifyContent:'center', alignItems:'center'}} />
+                    <Image source={require('../icon/andre.jpg')} style={styles.profileImg} />
                 </View>
 
-                <View style={{flex:1, justifyContent:'center', alignItems:'center', marginBottom:30}}>
-                    <Text style={{fontSize:20, fontWeight:'bold', color:'#000'}}>Andre Feri Saputra</Text>
+                <View style={styles.userName}>
+                    <Text style={styles.nameText}>Andre Feri Saputra</Text>
                 </View>
 
                 <SafeAreaView style={styles.container} forceInset={{ top: 'always', horizontal: 'never' }}>
@@ -42,28 +42,33 @@ class drawerMenu extends Component {
                     <DrawerItems {...this.props} />
 
                     <TouchableOpacity 
-                        style={{flexDirection:'row', marginTop:7}} onPress={() => this.togglePicker()}>
-                        <Image source={require('../icon/addcategory.png')} style={{width:20, height:20, marginLeft: 17}} />
-                        <Text style={{color: 'black', fontWeight:'bold', marginLeft: 37}}>Add Category</Text>
+                        style={styles.modalBtn} 
+                        onPress={() => this.togglePicker()}>
+                            
+                        <Image source={require('../icon/addcategory.png')} style={styles.addCatIcon} />
+                        
+                        <Text style={styles.addCatText}>Add Category</Text>
                     </TouchableOpacity>
 
                     <Modal visible={this.state.pickerDisplayed} animationType={"fade"} transparent={true}>
-                    <View style={styles.modalContainer}>
+                    <TouchableHighlight onPress={() => this.togglePicker()} style={{ height:'100%' }}>
+                        <View style={styles.modalContainer}>
 
-                            <TextInput style={{width:'100%', borderColor:'#2ED1A2', borderBottomWidth:1, marginBottom:7}} placeholder='Category Name...' multiline={true} />
+                                <TextInput style={styles.catName} placeholder='Category Name...' multiline={true} />
 
-                            <TextInput multiline={true} style={{width:'100%', borderColor:'#2ED1A2', borderBottomWidth:1}} placeholder='Image Url...' />
+                                <TextInput multiline={true} style={styles.catImg} placeholder='Image Url...' />
 
-                        <View style={{padding:10, flex:1, flexDirection:'row', justifyContent:'space-between', marginTop:10}}>
-                            <TouchableHighlight onPress={() => this.togglePicker()} style={{alignItems:'flex-start'}}>
-                                <Text style={{ color: '#999', fontWeight:'bold' }}>Add</Text>
-                            </TouchableHighlight>
-                            
-                            <TouchableHighlight onPress={() => this.togglePicker()} style={{ alignItems:'flex-end' }}>
-                                <Text style={{ color: '#999' }}>Cancel</Text>
-                            </TouchableHighlight>
+                            <View style={{padding:10, flex:1, flexDirection:'row', justifyContent:'space-between', marginTop:10}}>
+                                <TouchableHighlight onPress={() => this.togglePicker()} style={{alignItems:'flex-start'}}>
+                                    <Text style={{ color: '#999', fontWeight:'bold' }}>Add</Text>
+                                </TouchableHighlight>
+                                
+                                <TouchableHighlight onPress={() => this.togglePicker()} style={{ alignItems:'flex-end' }}>
+                                    <Text style={{ color: '#999' }}>Cancel</Text>
+                                </TouchableHighlight>
+                            </View>
                         </View>
-                    </View>
+                    </TouchableHighlight>
                     </Modal>
                 </SafeAreaView>
             </ScrollView>
@@ -89,6 +94,49 @@ const styles = StyleSheet.create({
         justifyContent:'center', 
         alignItems:'center', 
         marginVertical:15
+    },
+    profileImg : {
+        height:120, 
+        width:120, 
+        borderRadius:60, 
+        justifyContent:'center', 
+        alignItems:'center'
+    },
+    userName: {
+        flex:1, 
+        justifyContent:'center', 
+        alignItems:'center', 
+        marginBottom:30
+    },
+    nameText: {
+        fontSize:20, 
+        fontWeight:'bold', 
+        color:'#000'
+    },
+    modalBtn: {
+        flexDirection:'row', 
+        marginTop:7
+    },
+    addCatIcon: {
+        width:20, 
+        height:20, 
+        marginLeft: 17
+    },
+    addCatText: {
+        color: 'black', 
+        fontWeight:'bold', 
+        marginLeft: 37
+    },
+    catName: {
+        width:'100%', 
+        borderColor:'#2ED1A2', 
+        borderBottomWidth:1, 
+        marginBottom:7
+    },
+    catImg: {
+        width:'100%', 
+        borderColor:'#2ED1A2', 
+        borderBottomWidth:1
     }
   });
 

@@ -22,7 +22,7 @@ class header extends React.Component {
         this.togglePicker();
       }
     
-      togglePicker() {
+      toggleModal() {
         this.setState({
           pickerDisplayed: !this.state.pickerDisplayed
         })
@@ -56,29 +56,23 @@ class header extends React.Component {
 
                 <View style={styles.sortByContainer}>
 
-                    <TouchableOpacity onPress={() => this.togglePicker()}>
+                    <TouchableOpacity onPress={() => this.toggleModal()}>
                         <Image source={require('../icon/download.png')} style={{width:20, height:20}} />
                     </TouchableOpacity>
 
                     <Modal visible={this.state.pickerDisplayed} animationType={"fade"} transparent={true}>
-                    <View style={{ margin: 20, padding: 20,
-                        backgroundColor: '#fff',
-                        top: 20,
-                        right: 0,
-                        alignItems: 'flex-start',
-                        elevation: 5,
-                        position: 'absolute' }}>
-                        { pickerValues.map((value, index) => {
-                        return <TouchableHighlight key={index} onPress={() => this.setPickerValue(value.value)} style={{ paddingTop: 4, paddingBottom: 4 }}>
-                            <Text>{ value.title }</Text>
-                            </TouchableHighlight>
-                        })}
-
-                        
-                        <TouchableHighlight onPress={() => this.togglePicker()} style={{ paddingTop: 4, paddingBottom: 4 }}>
-                        <Text style={{ color: '#999' }}>Cancel</Text>
-                        </TouchableHighlight>
-                    </View>
+                      <TouchableHighlight onPress={() => this.togglePicker()} style={{ alignItems:'flex-end', height:'100%' }}>
+                        <View style={styles.modalContainer}>
+                            { pickerValues.map((value, index) => {
+                            return <TouchableHighlight key={index} onPress={() => this.setPickerValue(value.value)} style={{ paddingTop: 4, paddingBottom: 4 }}>
+                                <Text>{ value.title }</Text>
+                                </TouchableHighlight>
+                            })}
+                            {/* <TouchableHighlight onPress={() => this.togglePicker()} style={{ alignItems:'flex-end' }}>
+                                    <Text style={{ color: '#999' }}>Cancel</Text>
+                                </TouchableHighlight> */}
+                        </View>
+                    </TouchableHighlight>
                     </Modal>
                 </View>
             </View>
@@ -121,6 +115,16 @@ const styles = StyleSheet.create({
         alignItems:'center', 
         marginRight:20, 
         justifyContent:'center'
+    },
+    modalContainer: {
+      margin: 20, 
+      padding: 20,
+      backgroundColor: '#fff',
+      top: 20,
+      right: 0,
+      alignItems: 'flex-start',
+      elevation: 5,
+      position: 'absolute' 
     }
 })
 
