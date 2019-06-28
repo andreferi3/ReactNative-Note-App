@@ -22,7 +22,7 @@ class header extends React.Component {
         this.togglePicker();
       }
     
-      toggleModal() {
+      togglePicker() {
         this.setState({
           pickerDisplayed: !this.state.pickerDisplayed
         })
@@ -56,7 +56,7 @@ class header extends React.Component {
 
                 <View style={styles.sortByContainer}>
 
-                    <TouchableOpacity onPress={() => this.toggleModal()}>
+                    <TouchableOpacity onPress={() => this.togglePicker()}>
                         <Image source={require('../icon/download.png')} style={{width:20, height:20}} />
                     </TouchableOpacity>
 
