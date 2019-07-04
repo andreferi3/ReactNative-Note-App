@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
-import { ScrollView, Image, View, StyleSheet, Text, TouchableOpacity, Modal, TouchableHighlight, TextInput } from 'react-native';
+import { ScrollView, Image, View, StyleSheet, Text, TouchableOpacity, Modal, TouchableHighlight, TextInput, FlatList } from 'react-native';
 import { SafeAreaView, DrawerItems } from 'react-navigation';
+import {styles} from '../public/styles/style.me';
+import { connect } from 'react-redux';
+import { addCategory, getCategory } from '../public/redux/actions/category';
+import { getNotesByCategoryId } from '../public/redux/actions/notes';
 
 class drawerMenu extends Component {
     constructor(props) {
@@ -8,7 +12,9 @@ class drawerMenu extends Component {
     
         this.state = {
           pickerSelection: 'Default value!',
-          pickerDisplayed: false
+          pickerDisplayed: false,
+          name: '',
+          image: ''
         }
     }
     
@@ -25,6 +31,25 @@ class drawerMenu extends Component {
             pickerDisplayed: !this.state.pickerDisplayed
         })
     }
+
+    async addCategory(data) {
+        try {
+            this.props.dispatch(addCategory(data));
+            this.togglePicker();
+        }
+        catch(err) {
+            console.error(err)
+        }
+    }
+
+    async getNoteByCategory(id) {
+        try {
+            this.props.dispatch(getNotesByCategoryId(id));
+        }
+        catch(err) {
+            console.log(err);
+        }
+    }
       
     render() {
         return (
@@ -39,7 +64,23 @@ class drawerMenu extends Component {
 
                 <SafeAreaView style={styles.container} forceInset={{ top: 'always', horizontal: 'never' }}>
 
-                    <DrawerItems {...this.props} />
+                    {/* <CategoryItem category={this.props.category} />                   */}
+
+                    <FlatList 
+                    data={this.props.category.data}
+                    keyExtractor={(item, index) => item.id.toString()}
+                    renderItem={({item}) => {
+                        return (
+                            <TouchableOpacity 
+                                style={styles.modalBtn}>
+                                    
+                                <Image source={{uri: item.image}} style={styles.addCatIcon} />
+                                
+                                <Text style={styles.addCatText}>{item.name}</Text>
+                            </TouchableOpacity>
+                        )
+                    }}
+                    />
 
                     <TouchableOpacity 
                         style={styles.modalBtn} 
@@ -54,12 +95,14 @@ class drawerMenu extends Component {
                     <TouchableHighlight onPress={() => this.togglePicker()} style={{ height:'100%' }}>
                         <View style={styles.modalContainer}>
 
-                                <TextInput style={styles.catName} placeholder='Category Name...' multiline={true} />
+                                <TextInput style={styles.catName} placeholder='Category Name...' multiline={true} onChangeText={val => this.setState({name: val})} />
 
-                                <TextInput multiline={true} style={styles.catImg} placeholder='Image Url...' />
+                                <TextInput multiline={true} style={styles.catImg} placeholder='Image Url...' onChangeText={val => this.setState({image: val})} />
 
                             <View style={{padding:10, flex:1, flexDirection:'row', justifyContent:'space-between', marginTop:10}}>
-                                <TouchableHighlight onPress={() => this.togglePicker()} style={{alignItems:'flex-start'}}>
+                                <TouchableHighlight 
+                                    onPress={() => this.addCategory({name: this.state.name, image: this.state.image})} 
+                                    style={{alignItems:'flex-start'}}>
                                     <Text style={{ color: '#999', fontWeight:'bold' }}>Add</Text>
                                 </TouchableHighlight>
                                 
@@ -76,68 +119,13 @@ class drawerMenu extends Component {
     }
 }
 
-const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-    },
-    modalContainer: {
-        paddingHorizontal: 30,
-        backgroundColor: '#fff',
-        top: 150,
-        right: 50,
-        left: 50,
-        position: 'absolute',
-        elevation: 30, 
-    },
-    drawerProfile: {
-        flex:1, 
-        justifyContent:'center', 
-        alignItems:'center', 
-        marginVertical:15
-    },
-    profileImg : {
-        height:120, 
-        width:120, 
-        borderRadius:60, 
-        justifyContent:'center', 
-        alignItems:'center'
-    },
-    userName: {
-        flex:1, 
-        justifyContent:'center', 
-        alignItems:'center', 
-        marginBottom:30
-    },
-    nameText: {
-        fontSize:20, 
-        fontWeight:'bold', 
-        color:'#000'
-    },
-    modalBtn: {
-        flexDirection:'row', 
-        marginTop:7
-    },
-    addCatIcon: {
-        width:20, 
-        height:20, 
-        marginLeft: 17
-    },
-    addCatText: {
-        color: 'black', 
-        fontWeight:'bold', 
-        marginLeft: 37
-    },
-    catName: {
-        width:'100%', 
-        borderColor:'#2ED1A2', 
-        borderBottomWidth:1, 
-        marginBottom:7
-    },
-    catImg: {
-        width:'100%', 
-        borderColor:'#2ED1A2', 
-        borderBottomWidth:1
-    }
-  });
+{styles};
 
-export default drawerMenu;
+const mapStateToProps = state => {
+    return {
+        category: state.category,
+        notes: state.notes
+    }
+}
+
+export default connect(mapStateToProps)(drawerMenu);

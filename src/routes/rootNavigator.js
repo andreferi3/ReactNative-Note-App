@@ -42,9 +42,7 @@ const AppDrawerNavigator = createDrawerNavigator(
       navigationOptions: {
         drawerLabel: ()=>null
       }
-    },
-    Notes: Notes,
-    Wishlist: Wishlist
+    }
   },
   {
     contentComponent: DrawerMenu

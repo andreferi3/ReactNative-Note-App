@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { View, TouchableOpacity, Image, Text, StyleSheet, Modal, TouchableHighlight } from 'react-native';
 import { Form, Picker, Icon } from 'native-base';
-
+import { getNotes } from '../public/redux/actions/notes';
+import { connect } from 'react-redux';
 
 class header extends React.Component {
 
@@ -27,19 +28,21 @@ class header extends React.Component {
           pickerDisplayed: !this.state.pickerDisplayed
         })
       }
+
+    //   componentDidMount() {
+    //       this.props.dispatch(getNotes());
+    //   }
+
+
+    //     sortAscending = () => {
+    //         this.props.dispatch(getNotes(search='', page=1, sort='asc'));
+    //     }
+
+    //     sortDescending = () => {
+    //         this.props.dispatch(getNotes(search='', page=1, sort='desc'));
+    //     }
     
       render() {
-        const pickerValues = [
-          {
-            title: 'ASCENDING',
-            value: 'ASCENDING'
-          },
-          {
-            title: 'DESCENDING',
-            value: 'DESCENDING'
-          }
-        ]
-
         return (
             <View style={styles.header}>
                 <View style={styles.imgProfilContainer}>
@@ -63,14 +66,13 @@ class header extends React.Component {
                     <Modal visible={this.state.pickerDisplayed} animationType={"fade"} transparent={true}>
                       <TouchableHighlight onPress={() => this.togglePicker()} style={{ alignItems:'flex-end', height:'100%' }}>
                         <View style={styles.modalContainer}>
-                            { pickerValues.map((value, index) => {
-                            return <TouchableHighlight key={index} onPress={() => this.setPickerValue(value.value)} style={{ paddingTop: 4, paddingBottom: 4 }}>
-                                <Text>{ value.title }</Text>
-                                </TouchableHighlight>
-                            })}
-                            {/* <TouchableHighlight onPress={() => this.togglePicker()} style={{ alignItems:'flex-end' }}>
-                                    <Text style={{ color: '#999' }}>Cancel</Text>
-                                </TouchableHighlight> */}
+                            <TouchableHighlight style={{ paddingTop: 4, paddingBottom: 4 }}>
+                                <Text>ASCENDING</Text>
+                            </TouchableHighlight>
+
+                            <TouchableHighlight style={{ paddingTop: 4, paddingBottom: 4 }}>
+                                <Text>DESCENDING</Text>
+                            </TouchableHighlight>
                         </View>
                     </TouchableHighlight>
                     </Modal>
@@ -128,4 +130,10 @@ const styles = StyleSheet.create({
     }
 })
 
-export default header;
+const mapStateToProps = state => {
+    return {
+        notes: state.notes
+    }
+}
+
+export default connect(mapStateToProps)(header);
