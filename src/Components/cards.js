@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { AppRegistry, View, Text, StyleSheet, TouchableOpacity, FlatList, Alert, ScrollView, RefreshControl } from 'react-native';
+import { AppRegistry, View, Text, StyleSheet, TouchableOpacity, FlatList, Alert, ScrollView, RefreshControl, ActivityIndicator } from 'react-native';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import { connect } from 'react-redux';
 import { getNotes, deleteNotes, getNotesWithParams } from '../public/redux/actions/notes';
 import moment from 'moment';
 
-class FlatListItem extends Component {
+class FlatListItem extends React.Component {
     
     constructor(props) {
         super(props);
@@ -34,7 +34,11 @@ class FlatListItem extends Component {
                 }} >
                 <Text style={styles.date}>{this.state.time}</Text>
                 <Text style={styles.title}>{this.props.item.notes_title}</Text>
-                <Text style={styles.category}>{this.props.item.category}</Text>
+                {
+                    this.props.item.category === null ? 
+                    <Text style={styles.category}>Empty</Text> :
+                    <Text style={styles.category}>{this.props.item.category}</Text>
+                }
                 <Text numberOfLines={2} style={styles.note}>{this.props.item.note_description+'...'}</Text>
             </TouchableOpacity>
         )
@@ -79,6 +83,7 @@ class cards extends Component {
                 keyExtractor={this._keyExtractor}
                 onEndReached={this.props.fetchNotesWithPagination}
                 onEndReachedThreshold={this.props.limitScrollForFetch}
+                ListFooterComponent={this.props.refreshFooter}
                 deleteNote={() => {this.props.deleteNote}}
                 renderItem={({item, index}) => {
                     return(

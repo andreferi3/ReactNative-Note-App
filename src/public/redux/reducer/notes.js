@@ -3,6 +3,9 @@ import moment from 'moment';
 const initialState = {
     data: [],
     Data: [],
+    byCategory: [],
+    category_id: null,
+    startPage: 1,
     isError: false,
     isLoading: false
 }
@@ -13,14 +16,14 @@ export default notes = (state = initialState, action) => {
         case 'GET_NOTES_PENDING':
             return {
                 ...state,
-                isLoading: true
+                isLoadingNotes: true
             }
             break;
         
         case 'GET_NOTES_REJECTED':
             return {
                 ...state,
-                isLoading: false,
+                isLoadingNotes: false,
                 isError: true
             }
             break;
@@ -28,21 +31,22 @@ export default notes = (state = initialState, action) => {
         case 'GET_NOTES_FULFILLED':
             return {
                 ...state,
-                isLoading: false,
+                isLoadingNotes: false,
                 isError: false,
-                page: action.payload.data.Page_Count,
+                category_id: null,
+                page: action.payload.data,
                 data: action.payload.data.Data
             }
             break;
 
-        case 'GET_NOTES_SEARCH_PENDING':
+        case 'GET_NOTES_LOADMORE_PENDING':
             return {
                 ...state,
-                isLoading: true
+                isLoadingFooter: true
             }
             break;
         
-        case 'GET_NOTES_SEARCH_REJECTED':
+        case 'GET_NOTES_LOADMORE_REJECTED':
             return {
                 ...state,
                 isLoading: false,
@@ -50,13 +54,12 @@ export default notes = (state = initialState, action) => {
             }
             break;
         
-        case 'GET_NOTES_SEARCH_FULFILLED':
+        case 'GET_NOTES_LOADMORE_FULFILLED':
             console.log(state.data);
             return {
                 ...state,
-                isLoading: false,
+                isLoadingFooter: false,
                 isError: false,
-                page: action.payload.data.Page_Count,
                 data: state.data.concat(action.payload.data.Data)
             }
             break;
@@ -81,7 +84,10 @@ export default notes = (state = initialState, action) => {
                 ...state,
                 isLoading: false,
                 isError: false,
-                data: action.payload.data.data
+                category_id: action.payload.data.Data[0],
+                byCategory: action.payload.data.Data,
+                data: state.byCategory.concat(action.payload.data.Data),
+                page: action.payload.data,
             }
             break;
 

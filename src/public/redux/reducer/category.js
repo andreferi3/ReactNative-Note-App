@@ -68,6 +68,7 @@ export default category = (state = initialState, action) => {
             break;
 
         case 'DELETE_ALL_NOTES_FULFILLED':
+            console.log(state.data);
             return {
                 ...state,
                 isLoading: false,

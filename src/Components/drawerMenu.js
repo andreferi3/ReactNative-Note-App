@@ -5,6 +5,7 @@ import {styles} from '../public/styles/style.me';
 import { connect } from 'react-redux';
 import { addCategory, deleteNotesByCategory } from '../public/redux/actions/category';
 import { getNotesByCategoryId } from '../public/redux/actions/notes';
+import { DrawerActions } from 'react-navigation-drawer';
 
 class drawerMenu extends Component {
     constructor(props) {
@@ -14,7 +15,10 @@ class drawerMenu extends Component {
           pickerSelection: 'Default value!',
           pickerDisplayed: false,
           name: '',
-          image: ''
+          image: '',
+          search: '',
+          sort: 'desc',
+          page: 1
         }
     }
     
@@ -39,12 +43,14 @@ class drawerMenu extends Component {
         }
         catch(err) {
             console.error(err)
+     
         }
     }
 
-    async getNoteByCategory(id) {
+    async getAllNotesByCategory(id) {
         try {
-            this.props.dispatch(getNotesByCategoryId(id));
+            this.props.dispatch(getNotesByCategoryId(id, this.state.search, this.state.page, this.state.sort))
+            this.props.navigation.dispatch(DrawerActions.closeDrawer())
         }
         catch(err) {
             console.log(err);
@@ -82,6 +88,7 @@ class drawerMenu extends Component {
                         return (
                             <TouchableOpacity 
                                 style={styles.modalBtn}
+                                onPress={() => this.getAllNotesByCategory(item.id)}
                                 onLongPress={() => {
                                     Alert.alert(
                                         'Warning!',

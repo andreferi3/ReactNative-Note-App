@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, Image, ActivityIndicator, Alert } from 'react-native';
 import { ScrollView, TextInput, TouchableOpacity } from 'react-native-gesture-handler';
+import lodash from 'lodash';
 import Header from '../Components/header';
 import Cards from '../Components/cards';
 import { connect } from 'react-redux';
 import { getCategory } from '../public/redux/actions/category';
-import { getNotes, getNotesWithParams } from '../public/redux/actions/notes';
+import { getNotes, getNotesWithParams, getNotesByCategoryId } from '../public/redux/actions/notes';
 
 class Home extends React.Component {
 
@@ -17,7 +18,9 @@ class Home extends React.Component {
           page: 1,
           sort: 'desc',
           search: '',
-          refresh: false
+          refresh: false,
+          limitEndReachedTreshold : 0.1,
+          resetLimit: 0.1
         };
       }
 
@@ -27,39 +30,39 @@ class Home extends React.Component {
     }
 
     fetchNotesPagination = () => {
-        if(this.state.page < this.props.notes.page) {
-            this.setState({
-                page: this.state.page + 1
-            },
-            () => {
-                this.props.dispatch(getNotesWithParams(this.state.search, this.state.page, this.state.sort))
-            })
+        if(this.props.notes.category_id !== null) {
+            if(this.state.page < this.props.notes.page.Page_Count) {
+                this.setState({
+                    page: this.state.page + 1
+                },
+                () => {
+                    this.props.dispatch(getNotesByCategoryId(this.props.notes.category_id.id_category, this.state.search, this.state.page, this.state.sort))
+                })
+            }
+        } else {
+            if(this.state.page < this.props.notes.page.Page_Count) {
+                this.setState({
+                    page: this.state.page + 1
+                },
+                () => {
+                    this.props.dispatch(getNotesWithParams(this.state.search, this.state.page, this.state.sort))
+                })
+            }
         }
     }
     
     fetchNotes = () => {
-        this.props.dispatch(getNotes(this.state.search, 1, this.state.sort));
+        this.setState({
+            page: 1
+        },
+        () => {
+            this.props.dispatch(getNotes(this.state.search, this.state.page, this.state.sort));
+        })
     }
 
     fetchCategories = () => {
         this.props.dispatch(getCategory());
     }
-
-    // findNoteByTitle = val => {
-    //     try {
-    //         if(this.props.notes.page > 1) {
-    //             this.setState({
-    //                 page: 1,
-    //                 search: val
-    //             },
-    //             () => 
-    //                 this.props.dispatch(getNotes(this.state.search, this.state.page, this.state.sort))
-    //             )
-    //         }
-    //     } catch(err) {
-    //         return val + ' Data not found';
-    //     }
-    // }
 
     onRefresh = () => {
         this.setState({refreshing: true}, 
@@ -69,52 +72,79 @@ class Home extends React.Component {
     }
 
     sortByAscending = () => {
-        this.setState({
-            page: 1,
-            sort: 'ASC'
-        },
-        () => this.props.dispatch(getNotes(this.state.search, this.state.page, this.state.sort)))
+        if(this.props.notes.category_id !== null) {
+            this.setState({
+                page: 1,
+                sort: 'ASC'
+            },
+            () => this.props.dispatch(getNotesByCategoryId(this.props.notes.category_id.id_category, this.state.search, this.state.page, this.state.sort)))
+        } else {
+            this.setState({
+                page: 1,
+                sort: 'ASC'
+            },
+            () => this.props.dispatch(getNotes(this.state.search, this.state.page, this.state.sort)))
+        }
     }
 
     sortByDescending = () => {
-        this.setState({
-            page: 1,
-            sort: 'DESC'
-        },
-        () => this.props.dispatch(getNotes(this.state.search, this.state.page, this.state.sort)))
+        if(this.props.notes.category_id !== null) {
+            this.setState({
+                page: 1,
+                sort: 'DESC'
+            },
+            () => this.props.dispatch(getNotesByCategoryId(this.props.notes.category_id.id_category, this.state.search, this.state.page, this.state.sort)))
+        } else {
+            this.setState({
+                page: 1,
+                sort: 'DESC'
+            },
+            () => this.props.dispatch(getNotes(this.state.search, this.state.page, this.state.sort)))
+        }
     }
 
+    search = (value) => {
+        if(this.props.notes.category_id !== null) {
+            this.setState({
+                search: value,
+                page: 1
+            },
+            () => {
+                this.props.dispatch(getNotesByCategoryId(this.props.notes.category_id.id_category, this.state.search, this.state.page, this.state.sort))                
+            })
+        } else {
+            this.setState({
+                search: value,
+                page: 1
+            },
+            () => {
+                this.props.dispatch(getNotes(this.state.search, this.state.page, this.state.sort))                
+            })
+        }
+    }
 
     render() {
         return (
         <React.Fragment>
-            {
-                this.props.notes.isLoading ? <ActivityIndicator size='large' color='#0000ff' style={{height: '100%', width:'100%'}} /> 
-                : this.props.notes.isError ? <Text>Data not found</Text>
-                : null 
-            }
             <Header 
                 navigation={this.props.navigation}
                 sortByAscending={this.sortByAscending}
                 sortByDescending={this.sortByDescending} />
 
             <View style={styles.containerSearch}>
-                <TextInput placeholder='Search...' style={styles.searchInput} onChangeText={
-                    (val) => {
-                        this.setState({
-                            search: val
-                        },
-                        () => {
-                            this.props.dispatch(getNotes(this.state.search, 1, this.state.sort))
-                        })}} />
+                <TextInput placeholder='Search...' style={styles.searchInput} onChangeText={lodash.debounce(this.search, 500)} />
             </View>       
-            
-            <Cards 
+            {
+                this.props.notes.isLoadingNotes ? <ActivityIndicator size='large' color='#0000ff' style={{height: '100%', width:'100%'}} /> 
+                : this.props.notes.isError ? <Text>Data not found</Text>
+                : <Cards 
                 navigation={this.props.navigation}
                 fetchNotesWithPagination={this.fetchNotesPagination}
-                limitScrollForFetch={0.1}
+                limitScrollForFetch={this.props.notes.isLoadingNotes ? this.state.limitEndReachedTreshold : this.state.resetLimit}
                 onRefresh={this.onRefresh}
+                refreshFooter={() => this.props.notes.isLoadingFooter ? <ActivityIndicator size='large' color='#0000ff' style={{width:'100%'}} /> : null }
             />
+            }
 
             <View style={styles.buttonContainer}>
                 <TouchableOpacity onPress={() => {this.props.navigation.navigate('AddNote')}}>

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-let url = 'http://192.168.6.194:8080/category';
+let url = 'http://192.168.43.136:8080/category';
 
 export const getCategory = () => {
     return {
