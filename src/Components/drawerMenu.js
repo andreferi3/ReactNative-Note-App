@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { ScrollView, Image, View, StyleSheet, Text, TouchableOpacity, Modal, TouchableHighlight, TextInput, FlatList } from 'react-native';
+import { ScrollView, Image, View, StyleSheet, Text, TouchableOpacity, Modal, TouchableHighlight, TextInput, FlatList, Alert } from 'react-native';
 import { SafeAreaView, DrawerItems } from 'react-navigation';
 import {styles} from '../public/styles/style.me';
 import { connect } from 'react-redux';
-import { addCategory, getCategory } from '../public/redux/actions/category';
+import { addCategory, deleteNotesByCategory } from '../public/redux/actions/category';
 import { getNotesByCategoryId } from '../public/redux/actions/notes';
 
 class drawerMenu extends Component {
@@ -50,6 +50,15 @@ class drawerMenu extends Component {
             console.log(err);
         }
     }
+
+    async deleteAllNoteByCategory(id) {
+        try {
+            this.props.dispatch(deleteNotesByCategory(id));
+        }
+        catch(err) {
+            console.log(err);
+        }
+    }
       
     render() {
         return (
@@ -72,7 +81,23 @@ class drawerMenu extends Component {
                     renderItem={({item}) => {
                         return (
                             <TouchableOpacity 
-                                style={styles.modalBtn}>
+                                style={styles.modalBtn}
+                                onLongPress={() => {
+                                    Alert.alert(
+                                        'Warning!',
+                                        `Are you sure want to delete all notes from category ${item.name}`,
+                                        [
+                                          {text: 'Oke', onPress:() => this.deleteAllNoteByCategory(item.id)},
+                                          {},
+                                          {
+                                            text: 'Cancel',
+                                            onPress: () => console.log('Cancel Pressed'),
+                                            style: 'cancel',
+                                          }
+                                        ],
+                                        {cancelable: false},
+                                    )
+                                }}>
                                     
                                 <Image source={{uri: item.image}} style={styles.addCatIcon} />
                                 
@@ -81,7 +106,7 @@ class drawerMenu extends Component {
                         )
                     }}
                     />
-
+{/* this.deleteAllNoteByCategory */}
                     <TouchableOpacity 
                         style={styles.modalBtn} 
                         onPress={() => this.togglePicker()}>

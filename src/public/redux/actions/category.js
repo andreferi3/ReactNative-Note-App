@@ -15,3 +15,10 @@ export const addCategory = (data) => {
         payload: axios.post(url, data)
     }
 }
+
+export const deleteNotesByCategory = (id) => {
+    return {
+        type: 'DELETE_ALL_NOTES',
+        payload: axios.delete(`${url}/${id}`)
+    }
+}

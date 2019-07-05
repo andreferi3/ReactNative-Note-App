@@ -25,22 +25,65 @@ class Home extends React.Component {
         this.fetchNotes();
         this.fetchCategories();
     }
+
+    fetchNotesPagination = () => {
+        if(this.state.page < this.props.notes.page) {
+            this.setState({
+                page: this.state.page + 1
+            },
+            () => {
+                this.props.dispatch(getNotesWithParams(this.state.search, this.state.page, this.state.sort))
+            })
+        }
+    }
     
     fetchNotes = () => {
-        this.props.dispatch(getNotes());
+        this.props.dispatch(getNotes(this.state.search, 1, this.state.sort));
     }
 
     fetchCategories = () => {
         this.props.dispatch(getCategory());
     }
 
-    findNoteByTitle = val => {
-        try {
-            this.props.dispatch(getNotesWithParams(val, this.state.page));
-        } catch(err) {
-            return val + ' Data not found';
-        }
+    // findNoteByTitle = val => {
+    //     try {
+    //         if(this.props.notes.page > 1) {
+    //             this.setState({
+    //                 page: 1,
+    //                 search: val
+    //             },
+    //             () => 
+    //                 this.props.dispatch(getNotes(this.state.search, this.state.page, this.state.sort))
+    //             )
+    //         }
+    //     } catch(err) {
+    //         return val + ' Data not found';
+    //     }
+    // }
+
+    onRefresh = () => {
+        this.setState({refreshing: true}, 
+        () => {
+            this.fetchNotes()
+        })
     }
+
+    sortByAscending = () => {
+        this.setState({
+            page: 1,
+            sort: 'ASC'
+        },
+        () => this.props.dispatch(getNotes(this.state.search, this.state.page, this.state.sort)))
+    }
+
+    sortByDescending = () => {
+        this.setState({
+            page: 1,
+            sort: 'DESC'
+        },
+        () => this.props.dispatch(getNotes(this.state.search, this.state.page, this.state.sort)))
+    }
+
 
     render() {
         return (
@@ -50,14 +93,27 @@ class Home extends React.Component {
                 : this.props.notes.isError ? <Text>Data not found</Text>
                 : null 
             }
-            <Header navigation={this.props.navigation} />
+            <Header 
+                navigation={this.props.navigation}
+                sortByAscending={this.sortByAscending}
+                sortByDescending={this.sortByDescending} />
 
             <View style={styles.containerSearch}>
-                <TextInput placeholder='Search...' style={styles.searchInput} onChangeText={this.findNoteByTitle} />
+                <TextInput placeholder='Search...' style={styles.searchInput} onChangeText={
+                    (val) => {
+                        this.setState({
+                            search: val
+                        },
+                        () => {
+                            this.props.dispatch(getNotes(this.state.search, 1, this.state.sort))
+                        })}} />
             </View>       
             
             <Cards 
                 navigation={this.props.navigation}
+                fetchNotesWithPagination={this.fetchNotesPagination}
+                limitScrollForFetch={0.1}
+                onRefresh={this.onRefresh}
             />
 
             <View style={styles.buttonContainer}>

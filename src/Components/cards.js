@@ -55,34 +55,12 @@ class cards extends Component {
         }
     }
 
-    fetchNotes = () => {
-        this.props.dispatch(getNotes());
-    }
-
-    _onRefresh = () => {
-        this.setState({refreshing: true}, 
-        () => {
-            this.fetchNotes()
-        })
-    }
-
     async deleteNote(id) {
         try {
             this.props.dispatch(deleteNotes(id));
         }
         catch(err) {
             console.log(err)
-        }
-    }
-
-    handleLoadMore = () => {
-        if(this.state.page < this.props.notes.page) {
-            this.setState({
-                page: this.state.page+1
-            },
-            () => {
-                this.props.dispatch(getNotesWithParams(this.state.page))
-            })
         }
     }
 
@@ -96,15 +74,16 @@ class cards extends Component {
                 refreshControl={
                     <RefreshControl 
                     refreshing={this.props.notes.isLoading}
-                    onRefresh={this._onRefresh} />
+                    onRefresh={this.props.onRefresh} />
                 }
                 keyExtractor={this._keyExtractor}
-                onEndReached={this.handleLoadMore}
-                onEndReachedThreshold={0.1}
+                onEndReached={this.props.fetchNotesWithPagination}
+                onEndReachedThreshold={this.props.limitScrollForFetch}
                 deleteNote={() => {this.props.deleteNote}}
                 renderItem={({item, index}) => {
                     return(
-                        <FlatListItem navigation={this.props.navigation} item={item}  index={index} deleteNote={() => Alert.alert(
+                        <FlatListItem navigation={this.props.navigation} item={item}  index={index} deleteNote={() => 
+                            Alert.alert(
                             'Warning!',
                             'Are you sure want to delete this notes ?',
                             [

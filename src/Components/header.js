@@ -66,11 +66,11 @@ class header extends React.Component {
                     <Modal visible={this.state.pickerDisplayed} animationType={"fade"} transparent={true}>
                       <TouchableHighlight onPress={() => this.togglePicker()} style={{ alignItems:'flex-end', height:'100%' }}>
                         <View style={styles.modalContainer}>
-                            <TouchableHighlight style={{ paddingTop: 4, paddingBottom: 4 }}>
+                            <TouchableHighlight style={{ paddingTop: 4, paddingBottom: 4 }} onPress={this.props.sortByAscending}>
                                 <Text>ASCENDING</Text>
                             </TouchableHighlight>
 
-                            <TouchableHighlight style={{ paddingTop: 4, paddingBottom: 4 }}>
+                            <TouchableHighlight style={{ paddingTop: 4, paddingBottom: 4 }} onPress={this.props.sortByDescending}>
                                 <Text>DESCENDING</Text>
                             </TouchableHighlight>
                         </View>

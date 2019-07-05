@@ -2,17 +2,17 @@ import axios from 'axios';
 
 let url = 'http://192.168.6.194:8080/notes';
 
-export const getNotes = () => {
+export const getNotes = (search, page, sort) => {
     return {
         type: 'GET_NOTES',
-        payload: axios.get(`${url}`)
+        payload: axios.get(`${url}?search=${search}&page=${page}&sort=${sort}`)
     }
 }
 
-export const getNotesWithParams = (page) => {
+export const getNotesWithParams = (search, page, sort) => {
     return {
         type: 'GET_NOTES_SEARCH',
-        payload: axios.get(`${url}?page${page}`)
+        payload: axios.get(`${url}?search=${search}&page=${page}&sort=${sort}`)
     }
 }
 

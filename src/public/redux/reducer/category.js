@@ -52,6 +52,30 @@ export default category = (state = initialState, action) => {
             }
             break;
 
+        case 'DELETE_ALL_NOTES_PENDING':
+            return {
+                ...state,
+                isLoading: true
+            }
+            break;
+
+        case 'DELETE_ALL_NOTES_REJECTED':
+            return {
+                ...state,
+                isLoading: false,
+                isError: true
+            }
+            break;
+
+        case 'DELETE_ALL_NOTES_FULFILLED':
+            return {
+                ...state,
+                isLoading: false,
+                isError: false,
+                data: state.data.filter(category => action.payload.data.result.id != category.id)
+            }
+            break;
+
         default:
             return state
     }

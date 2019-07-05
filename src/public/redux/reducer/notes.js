@@ -57,8 +57,7 @@ export default notes = (state = initialState, action) => {
                 isLoading: false,
                 isError: false,
                 page: action.payload.data.Page_Count,
-                data: action.payload.data.Data,
-                nextData: state.data.concat(action.payload.data.Data)
+                data: state.data.concat(action.payload.data.Data)
             }
             break;
 
@@ -158,7 +157,7 @@ export default notes = (state = initialState, action) => {
                 isLoading: false,
                 isError: false,
                 data: state.data.map(data => 
-                    (data.id_note == action.payload.data.data.id_note) ? action.payload.data.data : data)
+                    (data.id_note == parseInt(action.payload.data.data.id_note)) ? action.payload.data.data : data)
             }
 
         default:

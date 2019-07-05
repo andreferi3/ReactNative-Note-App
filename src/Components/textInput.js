@@ -3,8 +3,6 @@ import { View, TextInput, ScrollView, Picker, Text, StyleSheet, Image, Touchable
 import { widthPercentageToDP, heightPercentageToDP } from 'react-native-responsive-screen';
 import { connect } from 'react-redux';
 import { addNotes } from '../public/redux/actions/notes';
-import Header from '../Components/headerBack';
-import category from '../public/redux/reducer/category';
 
 class textInput extends Component {
 
