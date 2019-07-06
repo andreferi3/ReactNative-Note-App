@@ -11,12 +11,12 @@ class FlatListItem extends React.Component {
         super(props);
 
         this.state = ({
-            color: this.props.item.id_category,
             time: moment(this.props.item.created_at).format('D MMM')
         })
     }
 
     render() {
+        const colorList = ['#2FC2DF', '#C0EB6A', '#FAD06C', '#FF92A9', '#fff78f', '#58b368', '#67eaca', '#f79c1d', '#ff0b55', '#7f4782'];
         return (
             <TouchableOpacity 
             onPress={() => {this.props.navigation.navigate('EditNote', this.props.item)}}
@@ -30,7 +30,7 @@ class FlatListItem extends React.Component {
                     elevation: 5,
                     zIndex: -1,
                     paddingHorizontal: 20,
-                    backgroundColor: this.state.color == 1 ? '#2FC2DF' : this.state.color == 2 ? '#C0EB6A' : this.state.color == 3 ? '#FAD06C' : this.state.color == 4 ? '#FF92A9' : '#004d61'
+                    backgroundColor: this.props.item.id_category == null ? '#004d61' : this.props.item.id_category >= 10 ?  colorList[this.props.item.id_category.toString().slice(1,2)] : colorList[this.props.item.id_category]
                 }} >
                 <Text style={styles.date}>{this.state.time}</Text>
                 <Text style={styles.title}>{this.props.item.notes_title}</Text>

@@ -24,6 +24,7 @@ export default category = (state = initialState, action) => {
             return {
                 isLoading: false,
                 isError: false,
+                totalData: action.payload.data.Total_Data,
                 data: action.payload.data.result
             }
 

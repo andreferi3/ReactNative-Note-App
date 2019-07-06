@@ -6,7 +6,7 @@ import Header from '../Components/header';
 import Cards from '../Components/cards';
 import { connect } from 'react-redux';
 import { getCategory } from '../public/redux/actions/category';
-import { getNotes, getNotesWithParams, getNotesByCategoryId } from '../public/redux/actions/notes';
+import { getNotes, getNotesWithParams, getNotesByCategoryId, getNotesByCategoryIdLoadMore } from '../public/redux/actions/notes';
 
 class Home extends React.Component {
 
@@ -36,7 +36,7 @@ class Home extends React.Component {
                     page: this.state.page + 1
                 },
                 () => {
-                    this.props.dispatch(getNotesByCategoryId(this.props.notes.category_id.id_category, this.state.search, this.state.page, this.state.sort))
+                    this.props.dispatch(getNotesByCategoryIdLoadMore(this.props.notes.category_id.id_category, this.state.search, this.state.page, this.state.sort))
                 })
             }
         } else {

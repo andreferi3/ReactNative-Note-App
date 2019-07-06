@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, TextInput, ScrollView, Picker, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { View, TextInput, ScrollView, Picker, Text, StyleSheet, Image, TouchableOpacity, Alert } from 'react-native';
 import { widthPercentageToDP, heightPercentageToDP } from 'react-native-responsive-screen';
 import { connect } from 'react-redux';
 import { addNotes } from '../public/redux/actions/notes';
@@ -17,12 +17,23 @@ class textInput extends Component {
   }
 
   async addNotes(data) {
-    try {
-      this.props.dispatch(addNotes(data))
-      this.props.navigation.goBack();
-    } catch(err) {
-
-    }
+      if(this.state.title === '' && this.state.description === '' && this.state.category === '' || this.state.category === 0 || this.state.category === null || this.state.category === undefined) {
+          Alert.alert(
+            'Warning!',
+            `Data cannot be empty`,
+            [
+              {
+                text: 'Ok',
+                onPress: () => console.log('Cancel Pressed'),
+                style: 'cancel',
+              }
+            ],
+            {cancelable: false},
+        )
+      } else {
+        this.props.dispatch(addNotes(data))
+        this.props.navigation.goBack(); 
+      }
   }
 
   render() {

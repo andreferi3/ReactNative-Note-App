@@ -85,6 +85,33 @@ export default notes = (state = initialState, action) => {
                 isLoading: false,
                 isError: false,
                 category_id: action.payload.data.Data[0],
+                totalData: action.payload.data.Total_Data,
+                data: action.payload.data.Data,
+                page: action.payload.data,
+            }
+            break;
+
+        case 'GET_NOTES_BY_CATEGORY_LOAD_MORE_PENDING':
+            return {
+                ...state,
+                isLoading: true
+            }
+            break;
+                
+        case 'GET_NOTES_BY_CATEGORY_LOAD_MORE_REJECTED':
+            return {
+                ...state,
+                isLoading: false,
+                isError: true
+            }
+            break;
+        
+        case 'GET_NOTES_BY_CATEGORY_LOAD_MORE_FULFILLED':
+            return {
+                ...state,
+                isLoading: false,
+                isError: false,
+                category_id: action.payload.data.Data[0],
                 byCategory: action.payload.data.Data,
                 data: state.byCategory.concat(action.payload.data.Data),
                 page: action.payload.data,
@@ -157,13 +184,13 @@ export default notes = (state = initialState, action) => {
             break;
         
         case 'EDIT_NOTES_FULFILLED':
-            console.log('Data state: ' + state.data);
+            console.log('Data state: ' + action.payload.data.data);
             return {
                 ...state,
                 isLoading: false,
                 isError: false,
                 data: state.data.map(data => 
-                    (data.id_note == parseInt(action.payload.data.data.id_note)) ? action.payload.data.data : data)
+                    (data.id_note === action.payload.data.data.id_note) ? action.payload.data.data : data)
             }
 
         default:

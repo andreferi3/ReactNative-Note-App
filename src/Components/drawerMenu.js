@@ -4,7 +4,7 @@ import { SafeAreaView, DrawerItems } from 'react-navigation';
 import {styles} from '../public/styles/style.me';
 import { connect } from 'react-redux';
 import { addCategory, deleteNotesByCategory } from '../public/redux/actions/category';
-import { getNotesByCategoryId } from '../public/redux/actions/notes';
+import { getNotesByCategoryId, getNotes } from '../public/redux/actions/notes';
 import { DrawerActions } from 'react-navigation-drawer';
 
 class drawerMenu extends Component {
@@ -59,7 +59,7 @@ class drawerMenu extends Component {
 
     async deleteAllNoteByCategory(id) {
         try {
-            this.props.dispatch(deleteNotesByCategory(id));
+            this.props.dispatch(deleteNotesByCategory(id))
         }
         catch(err) {
             console.log(err);

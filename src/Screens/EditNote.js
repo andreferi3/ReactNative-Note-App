@@ -4,16 +4,19 @@ import Header from '../Components/headerBack';
 import { View, ScrollView, TextInput, Picker, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { widthPercentageToDP, heightPercentageToDP } from 'react-native-responsive-screen';
 import { connect } from 'react-redux';
-import { editNotes } from '../public/redux/actions/notes';
+import { editNotes, getNotes } from '../public/redux/actions/notes';
 
 class EditNote extends Component {
 
     state = {
         category: this.props.navigation.state.params.id_category,
         categorySelected: this.props.navigation.state.params.category,
-        idNote: this.props.navigation.state.params.id_note,
+        idNote: parseInt(this.props.navigation.state.params.id_note),
         noteTitle: this.props.navigation.state.params.notes_title,
-        noteDescription: this.props.navigation.state.params.note_description
+        noteDescription: this.props.navigation.state.params.note_description,
+        search: '',
+        page: 1,
+        sort: 'desc'
     }
 
     _onTitleChange = val => {
@@ -70,7 +73,7 @@ class EditNote extends Component {
                             style={{fontSize: 24}} 
                             numberOfLines={7} 
                             multiline={true} 
-                            placeholder='Add Note' 
+                            placeholder='Add Note'
                             editable={true}
                             onChangeText={this._onNoteChange}>{this.props.navigation.state.params.note_description}</TextInput>
 
