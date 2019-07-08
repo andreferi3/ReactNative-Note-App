@@ -58,6 +58,14 @@ React Native invokes Objective-C APIs to render to iOS components, or Java APIs 
 
 See video demo the app from this link [Simple Note App - Video](https://www.youtube.com/watch?v=gvbVJ1fqZ-g&feature=youtu.be)
 
+## Try the app
+
+I have been released the app to APK format that can be installed in Android users only, you can download the apk from this link [Simple Note App.apk](https://drive.google.com/file/d/17DjIgEqzQU6B7OYMWoDcnSGbKXKnHQGC/view?usp=sharing).
+
+Thanks a lot!
+
+Regards
+
 <hr>
 
 <h3 align="center">Author</h3>
